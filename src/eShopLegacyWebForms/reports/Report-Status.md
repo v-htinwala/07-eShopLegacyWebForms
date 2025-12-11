@@ -4,9 +4,9 @@
 - **Project Name**: eShopLegacyWebForms
 - **Current Framework**: .NET Framework 4.7.2 (ASP.NET Web Forms)
 - **Target Framework**: .NET 8.0 LTS (ASP.NET Core MVC)
-- **Date**: December 10, 2025
-- **Current Phase**: Phase 3 - Code Migration (COMPLETE)
-- **Overall Progress**: 50% (3 of 6 phases complete)
+- **Date**: December 11, 2025
+- **Current Phase**: Phase 4 - Generate Infrastructure as Code (COMPLETE)
+- **Overall Progress**: 67% (4 of 6 phases complete)
 
 ## Migration Configuration
 
@@ -178,28 +178,80 @@
 - Comprehensive automated testing suite
 - Staging environment for validation before production
 
+## Phase 4: Infrastructure as Code - COMPLETE ✅
+
+### Infrastructure Components Created
+- ✅ **Terraform Configuration**
+  - `providers.tf`: Azure providers (azurerm ~> 4.0, azuread ~> 3.0)
+  - `variables.tf`: Configuration variables (subscription, tenant, location, SKUs)
+  - `main.tf`: Complete resource definitions
+  - `outputs.tf`: Deployment outputs (URLs, connection strings, IDs)
+
+- ✅ **Azure Resources Defined**
+  - Resource Group with environment tagging
+  - App Service Plan (Linux, Basic B1)
+  - App Service (Linux Web App, .NET 8.0)
+  - Azure SQL Server with Entra ID authentication
+  - Azure SQL Database (Basic, 2GB)
+  - Key Vault with RBAC authorization
+  - Application Insights for monitoring
+  - Log Analytics Workspace
+  - User-Assigned Managed Identity
+  - RBAC role assignments
+
+- ✅ **Security Configurations**
+  - Managed identity for passwordless authentication
+  - RBAC authorization (Key Vault Secrets User, SQL DB Contributor)
+  - HTTPS-only enforcement
+  - TLS 1.2 minimum version
+  - Key Vault with soft delete and RBAC
+  - SQL Server with Entra ID admin
+  - Application logging and monitoring
+
+- ✅ **Azure Developer CLI Integration**
+  - `azure.yaml` configuration
+  - Service definitions for web application
+  - Terraform provider specification
+
+- ✅ **Documentation**
+  - Comprehensive README with deployment steps
+  - Architecture diagrams
+  - Cost optimization details (~$20-30/month)
+  - Troubleshooting guidance
+  - Phase 4 completion report
+
+**Infrastructure Summary:**
+- **Total Resources**: 12 Azure resources
+- **Estimated Cost**: $20-30 USD/month
+- **Security**: Managed identities, RBAC, Key Vault, Entra ID
+- **Monitoring**: Application Insights + Log Analytics
+- **Compliance**: TLS 1.2, HTTPS-only, audit logging
+
 ## Success Criteria
 - ✅ Application running on .NET 8.0 LTS
-- ✅ Deployed to Azure App Service
-- ✅ Using Azure SQL Database
+- ⏳ Deployed to Azure App Service (Phase 5)
+- ⏳ Using Azure SQL Database (Phase 5)
 - ✅ Microsoft Entra ID authentication implemented
 - ✅ Infrastructure managed via Terraform
 - ✅ All existing functionality preserved
-- ✅ Improved performance and security posture
+- ⏳ Improved performance and security posture (Phase 5 validation)
 
 ## Next Steps
-**Proceed to Phase 4**: Testing & Validation
+**Proceed to Phase 5**: Deploy to Azure
 
 This will:
-- Create unit tests for services and controllers
-- Set up integration tests for database operations
-- Test authentication flows with Entra ID
-- Perform manual testing of all CRUD operations
-- Validate pagination, validation, and error handling
-- Performance testing and optimization
-- Security validation
+1. Initialize Terraform (`terraform init`)
+2. Validate Terraform configuration (`terraform validate`)
+3. Preview infrastructure changes (`terraform plan`)
+4. Deploy Azure infrastructure (`terraform apply`)
+5. Update Key Vault with Entra ID client secret
+6. Run Entity Framework Core migrations to Azure SQL
+7. Deploy application code to App Service (`azd deploy`)
+8. Verify application functionality
+9. Test Entra ID authentication
+10. Monitor with Application Insights
 
-**Estimated Time**: 1-2 weeks for complete testing
+**Estimated Time**: 2-3 hours for deployment and validation
 
 ---
-*Last Updated: December 10, 2025 - Phase 3 Complete*
+*Last Updated: December 11, 2025 - Phase 4 Complete*
