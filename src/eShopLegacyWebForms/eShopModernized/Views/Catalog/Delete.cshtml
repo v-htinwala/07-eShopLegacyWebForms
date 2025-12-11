@@ -1,0 +1,50 @@
+@model eShopModernized.Models.CatalogItem
+
+@{
+    ViewData["Title"] = "Delete Catalog Item";
+}
+
+<h2>Delete Catalog Item</h2>
+
+<h3 class="text-danger">Are you sure you want to delete this item?</h3>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4>@Model.Name</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="~/images/@Model.PictureFileName" class="img-fluid" alt="@Model.Name" onerror="this.src='/images/dummy.png'">
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-4">Description</dt>
+                            <dd class="col-sm-8">@Model.Description</dd>
+
+                            <dt class="col-sm-4">Price</dt>
+                            <dd class="col-sm-8">@Model.Price.ToString("C")</dd>
+
+                            <dt class="col-sm-4">Brand</dt>
+                            <dd class="col-sm-8">@Model.CatalogBrand?.Brand</dd>
+
+                            <dt class="col-sm-4">Type</dt>
+                            <dd class="col-sm-8">@Model.CatalogType?.Type</dd>
+
+                            <dt class="col-sm-4">Available Stock</dt>
+                            <dd class="col-sm-8">@Model.AvailableStock</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

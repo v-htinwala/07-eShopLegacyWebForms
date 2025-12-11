@@ -1,0 +1,102 @@
+@model eShopModernized.ViewModels.PaginatedItemsViewModel<eShopModernized.Models.CatalogItem>
+
+@{
+    ViewData["Title"] = "Home - eShop Catalog";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Catalog Items</h2>
+            <p>
+                <a asp-controller="Catalog" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New Item
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model.Data != null && Model.Data.Any())
+        {
+            @foreach (var item in Model.Data)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <img src="~/images/@item.PictureFileName" class="card-img-top" alt="@item.Name" onerror="this.src='/images/dummy.png'">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text text-muted small">@item.Description</p>
+                            <div class="mt-auto">
+                                <p class="card-text">
+                                    <strong>@item.Price.ToString("C")</strong>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        @item.CatalogBrand?.Brand | @item.CatalogType?.Type
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <small>Stock: @item.AvailableStock</small>
+                                </p>
+                                <div class="btn-group" role="group">
+                                    <a asp-controller="Catalog" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                                    <a asp-controller="Catalog" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a asp-controller="Catalog" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-12">
+                <div class="alert alert-info" role="alert">
+                    No catalog items found. <a asp-controller="Catalog" asp-action="Create">Create the first item</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.ActualPage > 0)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(Model.ActualPage - 1)">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                }
+
+                @for (int i = 0; i < Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.ActualPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@i">@(i + 1)</a>
+                    </li>
+                }
+
+                @if (Model.ActualPage < Model.TotalPages - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(Model.ActualPage + 1)">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

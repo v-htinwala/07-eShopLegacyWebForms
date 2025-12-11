@@ -1,0 +1,89 @@
+@model eShopModernized.Models.CatalogItem
+
+@{
+    ViewData["Title"] = "Create Catalog Item";
+}
+
+<h2>Create New Catalog Item</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="PictureFileName" class="control-label"></label>
+                <input asp-for="PictureFileName" class="form-control" />
+                <span asp-validation-for="PictureFileName" class="text-danger"></span>
+                <small class="form-text text-muted">Enter the filename (e.g., product1.jpg) - file should be in wwwroot/images/</small>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="CatalogTypeId" class="control-label"></label>
+                <select asp-for="CatalogTypeId" class="form-control" asp-items="ViewBag.CatalogTypeId">
+                    <option value="">-- Select Type --</option>
+                </select>
+                <span asp-validation-for="CatalogTypeId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="CatalogBrandId" class="control-label"></label>
+                <select asp-for="CatalogBrandId" class="form-control" asp-items="ViewBag.CatalogBrandId">
+                    <option value="">-- Select Brand --</option>
+                </select>
+                <span asp-validation-for="CatalogBrandId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="AvailableStock" class="control-label"></label>
+                <input asp-for="AvailableStock" class="form-control" />
+                <span asp-validation-for="AvailableStock" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="RestockThreshold" class="control-label"></label>
+                <input asp-for="RestockThreshold" class="form-control" />
+                <span asp-validation-for="RestockThreshold" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="MaxStockThreshold" class="control-label"></label>
+                <input asp-for="MaxStockThreshold" class="form-control" />
+                <span asp-validation-for="MaxStockThreshold" class="text-danger"></span>
+            </div>
+            
+            <div class="form-check mb-3">
+                <input asp-for="OnReorder" class="form-check-input" />
+                <label asp-for="OnReorder" class="form-check-label"></label>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

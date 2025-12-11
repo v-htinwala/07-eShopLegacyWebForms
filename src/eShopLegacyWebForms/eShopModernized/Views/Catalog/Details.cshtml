@@ -1,0 +1,56 @@
+@model eShopModernized.Models.CatalogItem
+
+@{
+    ViewData["Title"] = "Catalog Item Details";
+}
+
+<h2>Catalog Item Details</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>@Model.Name</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="~/images/@Model.PictureFileName" class="img-fluid" alt="@Model.Name" onerror="this.src='/images/dummy.png'">
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-4">Description</dt>
+                            <dd class="col-sm-8">@Model.Description</dd>
+
+                            <dt class="col-sm-4">Price</dt>
+                            <dd class="col-sm-8">@Model.Price.ToString("C")</dd>
+
+                            <dt class="col-sm-4">Brand</dt>
+                            <dd class="col-sm-8">@Model.CatalogBrand?.Brand</dd>
+
+                            <dt class="col-sm-4">Type</dt>
+                            <dd class="col-sm-8">@Model.CatalogType?.Type</dd>
+
+                            <dt class="col-sm-4">Available Stock</dt>
+                            <dd class="col-sm-8">@Model.AvailableStock</dd>
+
+                            <dt class="col-sm-4">Restock Threshold</dt>
+                            <dd class="col-sm-8">@Model.RestockThreshold</dd>
+
+                            <dt class="col-sm-4">Max Stock Threshold</dt>
+                            <dd class="col-sm-8">@Model.MaxStockThreshold</dd>
+
+                            <dt class="col-sm-4">On Reorder</dt>
+                            <dd class="col-sm-8">@(Model.OnReorder ? "Yes" : "No")</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
