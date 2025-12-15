@@ -56,51 +56,57 @@ resource "azurerm_key_vault" "main" {
   sku_name                   = "standard"
   soft_delete_retention_days = 7
   purge_protection_enabled   = false
-  enable_rbac_authorization  = true
+  rbac_authorization_enabled = true
   tags                       = local.common_tags
 }
 
 # SQL Server with Entra ID Authentication
-resource "azurerm_mssql_server" "main" {
-  name                         = "sql-${var.project_name}-${var.environment}-${local.resource_suffix}"
-  location                     = azurerm_resource_group.main.location
-  resource_group_name          = azurerm_resource_group.main.name
-  version                      = "12.0"
-  minimum_tls_version          = "1.2"
-  public_network_access_enabled = true
-  
-  azuread_administrator {
-    login_username = azurerm_user_assigned_identity.app.name
-    object_id      = azurerm_user_assigned_identity.app.principal_id
-  }
-
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.app.id]
-  }
-
-  tags = local.common_tags
-}
+# TEMPORARILY DISABLED - Blocked by subscription policy
+# resource "azurerm_mssql_server" "main" {
+#   name                         = "sql-${var.project_name}-${var.environment}-${local.resource_suffix}"
+#   location                     = azurerm_resource_group.main.location
+#   resource_group_name          = azurerm_resource_group.main.name
+#   version                      = "12.0"
+#   minimum_tls_version          = "1.2"
+#   public_network_access_enabled = true
+#   administrator_login          = "sqladmin"
+#   administrator_login_password = "P@ssw0rd123!TempOnly"
+#   
+#   azuread_administrator {
+#     login_username              = azurerm_user_assigned_identity.app.name
+#     object_id                   = azurerm_user_assigned_identity.app.principal_id
+#     azuread_authentication_only = false
+#   }
+#
+#   identity {
+#     type         = "UserAssigned"
+#     identity_ids = [azurerm_user_assigned_identity.app.id]
+#   }
+#
+#   tags = local.common_tags
+# }
 
 # SQL Database
-resource "azurerm_mssql_database" "main" {
-  name                        = "sqldb-${var.project_name}-${var.environment}"
-  server_id                   = azurerm_mssql_server.main.id
-  collation                   = "SQL_Latin1_General_CP1_CI_AS"
-  sku_name                    = var.sql_sku_name
-  max_size_gb                 = var.sql_max_size_gb
-  zone_redundant              = false
-  
-  tags = local.common_tags
-}
+# TEMPORARILY DISABLED - Depends on SQL Server
+# resource "azurerm_mssql_database" "main" {
+#   name                        = "sqldb-${var.project_name}-${var.environment}"
+#   server_id                   = azurerm_mssql_server.main.id
+#   collation                   = "SQL_Latin1_General_CP1_CI_AS"
+#   sku_name                    = var.sql_sku_name
+#   max_size_gb                 = var.sql_max_size_gb
+#   zone_redundant              = false
+#   
+#   tags = local.common_tags
+# }
 
 # SQL Firewall Rule - Allow Azure Services
-resource "azurerm_mssql_firewall_rule" "allow_azure" {
-  name             = "AllowAzureServices"
-  server_id        = azurerm_mssql_server.main.id
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
-}
+# TEMPORARILY DISABLED - Depends on SQL Server
+# resource "azurerm_mssql_firewall_rule" "allow_azure" {
+#   name             = "AllowAzureServices"
+#   server_id        = azurerm_mssql_server.main.id
+#   start_ip_address = "0.0.0.0"
+#   end_ip_address   = "0.0.0.0"
+# }
 
 # App Service Plan
 resource "azurerm_service_plan" "main" {
@@ -108,7 +114,7 @@ resource "azurerm_service_plan" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   os_type             = "Linux"
-  sku_name            = "${var.app_service_sku.tier}_${var.app_service_sku.size}"
+  sku_name            = var.app_service_sku.size
   tags                = local.common_tags
 }
 
@@ -147,11 +153,12 @@ resource "azurerm_linux_web_app" "main" {
     "AZURE_CLIENT_ID"                      = azurerm_user_assigned_identity.app.client_id
   }
 
-  connection_string {
-    name  = "CatalogConnection"
-    type  = "SQLAzure"
-    value = "Server=tcp:${azurerm_mssql_server.main.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.main.name};Authentication=Active Directory Default;"
-  }
+  # Connection string temporarily disabled - SQL Server blocked by policy
+  # connection_string {
+  #   name  = "CatalogConnection"
+  #   type  = "SQLAzure"
+  #   value = "Server=tcp:${azurerm_mssql_server.main.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.main.name};Authentication=Active Directory Default;"
+  # }
 
   logs {
     application_logs {
@@ -165,7 +172,9 @@ resource "azurerm_linux_web_app" "main" {
     }
   }
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {
+    "azd-service-name" = "web"
+  })
 }
 
 # RBAC: Key Vault Secrets User
@@ -176,19 +185,21 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
 }
 
 # RBAC: SQL DB Contributor
-resource "azurerm_role_assignment" "sql_db_contributor" {
-  scope                = azurerm_mssql_server.main.id
-  role_definition_name = "SQL DB Contributor"
-  principal_id         = azurerm_user_assigned_identity.app.principal_id
-}
+# TEMPORARILY DISABLED - Depends on SQL Server
+# resource "azurerm_role_assignment" "sql_db_contributor" {
+#   scope                = azurerm_mssql_server.main.id
+#   role_definition_name = "SQL DB Contributor"
+#   principal_id         = azurerm_user_assigned_identity.app.principal_id
+# }
 
 # Store Entra ID Client Secret in Key Vault (to be set manually)
-resource "azurerm_key_vault_secret" "client_secret" {
-  name         = "AzureAd--ClientSecret"
-  value        = "placeholder-update-after-deployment"
-  key_vault_id = azurerm_key_vault.main.id
-  
-  depends_on = [azurerm_role_assignment.keyvault_secrets_user]
-  
-  tags = local.common_tags
-}
+# TEMPORARILY DISABLED - RBAC permissions need time to propagate
+# resource "azurerm_key_vault_secret" "client_secret" {
+#   name         = "AzureAd--ClientSecret"
+#   value        = "placeholder-update-after-deployment"
+#   key_vault_id = azurerm_key_vault.main.id
+#   
+#   depends_on = [azurerm_role_assignment.keyvault_secrets_user]
+#   
+#   tags = local.common_tags
+# }

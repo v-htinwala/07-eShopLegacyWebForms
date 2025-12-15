@@ -13,22 +13,25 @@ output "app_service_name" {
   value       = azurerm_linux_web_app.main.name
 }
 
-output "sql_server_fqdn" {
-  description = "Fully qualified domain name of the SQL Server"
-  value       = azurerm_mssql_server.main.fully_qualified_domain_name
-  sensitive   = true
-}
+# TEMPORARILY DISABLED - SQL Server blocked by policy
+# output "sql_server_fqdn" {
+#   description = "Fully qualified domain name of the SQL Server"
+#   value       = azurerm_mssql_server.main.fully_qualified_domain_name
+#   sensitive   = true
+# }
 
-output "sql_database_name" {
-  description = "Name of the SQL Database"
-  value       = azurerm_mssql_database.main.name
-}
+# TEMPORARILY DISABLED - SQL Database blocked by policy
+# output "sql_database_name" {
+#   description = "Name of the SQL Database"
+#   value       = azurerm_mssql_database.main.name
+# }
 
-output "sql_connection_string" {
-  description = "SQL Database connection string with managed identity authentication"
-  value       = "Server=tcp:${azurerm_mssql_server.main.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.main.name};Authentication=Active Directory Default;"
-  sensitive   = true
-}
+# TEMPORARILY DISABLED - SQL Server blocked by policy
+# output "sql_connection_string" {
+#   description = "SQL Database connection string with managed identity authentication"
+#   value       = "Server=tcp:${azurerm_mssql_server.main.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.main.name};Authentication=Active Directory Default;"
+#   sensitive   = true
+# }
 
 output "key_vault_name" {
   description = "Name of the Key Vault"
