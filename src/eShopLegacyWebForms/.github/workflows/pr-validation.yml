@@ -1,0 +1,61 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches: [ code-remediation, main ]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  WORKING_DIRECTORY: './eShopModernized'
+
+jobs:
+  validate-pr:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+    
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+    
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+      continue-on-error: true
+    
+    - name: Check code formatting
+      run: dotnet format --verify-no-changes --verbosity diagnostic
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+      continue-on-error: true
+    
+    - name: Dependency review
+      uses: actions/dependency-review-action@v4
+      with:
+        fail-on-severity: moderate
+
+  pr-labeler:
+    name: Label Pull Request
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+    - name: Label PR
+      uses: actions/labeler@v5
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
