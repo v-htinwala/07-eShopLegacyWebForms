@@ -1,0 +1,121 @@
+# .NET Core / ASP.NET Core
+bin/
+obj/
+out/
+*.user
+*.suo
+*.cache
+.vs/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Azure Functions
+local.settings.json
+__azurite_*.json
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars.backup
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Azure Developer CLI
+.azure/
+*.env
+
+# Node modules (if any frontend build)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+logs/
+logFiles/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+secrets.json
+*.key
+*.pfx
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Application Insights
+ApplicationInsights.config
+
+# Package Files
+*.nupkg
+*.snupkg
+packages/
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+
+# Backup files
+*.bak
+backup/
+
+# Archives (keep the archive folder but ignore temporary zips and packages)
+*.zip
+*.tar
+*.gz
+!archive/**
+archive/**/packages/
+archive/**/bin/
+archive/**/obj/
+
+# Deployment artifacts
+publish/
+*.pubxml
+*.publishsettings
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# App logs
+app-logs/
+app-logs.zip
