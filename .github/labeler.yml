@@ -1,0 +1,20 @@
+# Configuration for automatic PR labeling
+infrastructure:
+  - eShopModernized/infra/**/*
+  - .github/workflows/infrastructure.yml
+
+application:
+  - eShopModernized/**/*.cs
+  - eShopModernized/**/*.cshtml
+  - eShopModernized/**/*.csproj
+
+ci-cd:
+  - .github/workflows/**
+
+documentation:
+  - docs/**/*.md
+  - '**/*.md'
+
+dependencies:
+  - eShopModernized/**/*.csproj
+  - '**/packages.config'
